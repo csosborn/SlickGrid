@@ -232,7 +232,8 @@
                 selectedRowIds = [];
                 var rows = grid.getSelectedRows();
                 for (var i = 0, l = rows.length; i < l; i++) {
-                    selectedRowIds.push(rows[i].id);
+                    var item = dataView.rows[rows[i]];
+                    if (item) selectedRowIds.push(item.id);
                 }
             };
 
@@ -264,6 +265,7 @@
 			// wire up model events to drive the grid
 			dataView.onRowCountChanged.subscribe(function(args) {
 				grid.updateRowCount();
+                grid.render();
 			});
 
 			dataView.onRowsChanged.subscribe(function(rows) {
@@ -274,15 +276,15 @@
 				{
 					// since how the original data maps onto rows has changed,
 					// the selected rows in the grid need to be updated
-					var rows = [];
+					var selRows = [];
 					for (var i = 0; i < selectedRowIds.length; i++)
 					{
 						var idx = dataView.getRowById(selectedRowIds[i]);
 						if (idx != undefined)
-							rows.push(idx);
+							selRows.push(idx);
 					}
 
-					grid.setSelectedRows(rows);
+					grid.setSelectedRows(selRows);
 				}
 			});
 
